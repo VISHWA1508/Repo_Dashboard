@@ -141,18 +141,25 @@
   function fill(ul, items) { ul.innerHTML = ''; items.forEach(function (t) { ul.appendChild(el('li', {}, t)); }); }
   function setStatus(kind, text) { $('dot').className = 'dot ' + kind; $('statusText').textContent = text; }
 
-  /* ---------- data + live stream ---------- */
+  /* ---------- data ---------- */
+  var pollTimer;
+  function scheduleLoad(delay) { clearTimeout(pollTimer); pollTimer = setTimeout(load, delay); }
   function load() {
-    return fetch('/api/snapshot', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
-      if (j.error) { setStatus('', 'Starting up…'); setTimeout(load, 2000); return; } snap = j; render();
-    }).catch(function () { setStatus('off', 'Cannot reach the server'); });
-  }
-  function connect() {
-    var es = new EventSource('/api/stream');
-    es.onmessage = function () { load(); };
-    es.onerror = function () { setStatus('off', 'Disconnected. Retrying…'); };
-    es.onopen = function () { if (snap) setStatus('live', 'Live · connected'); };
+    return fetch('/api/snapshot', { cache: 'no-store' }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.error || 'HTTP ' + r.status);
+        return j;
+      });
+    }).then(function (j) {
+      if (j.error) throw new Error(j.error);
+      snap = j;
+      render();
+      scheduleLoad((j.refresh_minutes || 15) * 60000);
+    }).catch(function (error) {
+      setStatus('off', 'Dashboard update failed: ' + error.message);
+      scheduleLoad(30000);
+    });
   }
   var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(render, 150); });
-  load().then(connect);
+  load();
 })();

@@ -5,8 +5,7 @@ const path = require('path');
 const { loadEnv } = require('./lib/env');
 loadEnv();
 const { fetchMarket } = require('./lib/sources');
-const { analyze } = require('./lib/engine');
-const { writeNote } = require('./lib/llm');
+const { buildSnapshot } = require('./lib/snapshot');
 
 const PORT = parseInt(process.env.PORT, 10) || 3000;
 const REFRESH_MIN = Math.max(5, parseInt(process.env.REFRESH_MINUTES, 10) || 15);
@@ -23,19 +22,11 @@ function readIndia() { return JSON.parse(fs.readFileSync(INDIA_FILE, 'utf8')); }
 async function rebuild(reason) {
   let india;
   try { india = readIndia(); } catch (e) { console.error('data/india.json is invalid:', e.message); return; }
-  const analysis = analyze(india, market.series);
-  const facts = { policy: india.policy, cpi: { latest: india.cpi.latest, food: india.cpi.food, upper_band: india.cpi.upper_band }, gdp: india.gdp, pmi: india.pmi, rbi_projection: india.rbi_projection, market: round(analysis.inputs.market), stress: analysis.inputs.stress_parts, decision: analysis.decision, scenarios: analysis.scenarios };
-  const llm = await writeNote(process.env, facts);
-  snapshot = {
-    generated_at: new Date().toISOString(), reason, market_fetched_at: marketAt, refresh_minutes: REFRESH_MIN,
-    mock: process.env.MOCK_DATA === '1', india, market: { series: market.series, status: market.status },
-    analysis, llm: { text: llm.text, source: llm.source, error: llm.error, at: llm.at || null, enabled: !!process.env.GEMINI_API_KEY },
-  };
+  snapshot = await buildSnapshot({ env: process.env, india, market, marketAt, reason });
   const msg = 'data: ' + JSON.stringify({ type: 'update', at: snapshot.generated_at }) + '\n\n';
   for (const c of clients) c.write(msg);
   console.log(new Date().toLocaleTimeString(), 'snapshot rebuilt (' + reason + ') ->', analysis.headline);
 }
-function round(o) { const r = {}; for (const k in o) r[k] = typeof o[k] === 'number' ? Math.round(o[k] * 100) / 100 : o[k]; return r; }
 
 async function refreshMarket(reason) {
   try { market = await fetchMarket(process.env); marketAt = new Date().toISOString(); }

@@ -53,6 +53,12 @@ data/india.json    India figures you update after each release
 public/            the dashboard page (index.html, app.js, style.css)
 ```
 
-## Put it online for free (optional)
+## Deploy to Vercel
+
+Import the repository into Vercel and deploy with the project root as the root directory. Vercel serves the dashboard from `public/` and runs `api/snapshot.js` as a serverless function. In Project Settings → Environment Variables, add `FRED_API_KEY` and optionally `GEMINI_API_KEY`; do not upload `.env`. Redeploy after changing environment variables or `data/india.json`.
+
+The hosted dashboard refreshes by polling the snapshot endpoint. Set `REFRESH_MINUTES` in Vercel to control the refresh interval (minimum 5 minutes). `MOCK_DATA=1` enables demo market data.
+
+## Other hosting options
 
 Render, Railway or Fly.io free plans can run this as a Node web service (start command `npm start`). Add `FRED_API_KEY` and `GEMINI_API_KEY` in the host's environment-variables screen instead of uploading `.env`. Free plans may sleep when idle, and free hosts reset files on redeploy, so edit `data/india.json` in your repo and redeploy to update it. Check each host's current free-plan limits.
