@@ -1,0 +1,30 @@
+{
+  "_readme": "India-specific data. RBI and MoSPI publish no free API, so update this file after each release (CPI on the 12th, GDP quarterly, RBI policy every two months). The server watches this file and the dashboard and its reasoning refresh the moment you save it.",
+  "policy": { "repo": 5.5, "sdf": 5.25, "msf": 5.75, "stance": "Calibrated tightening", "last_decision": "2026-10-07", "next_decision": "2026-12-04", "asof": "2026-10-07" },
+  "assumptions": { "neutral_real": 1.0, "potential_growth": 6.8, "pace": 0.2, "expected_inflation": null },
+  "cpi": {
+    "asof": "2026-11-12",
+    "latest": 6.09, "prev": 5.54, "food": 8.94, "food_prev": 7.74,
+    "target": 4, "lower_band": 2, "upper_band": 6,
+    "labels": ["Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26", "Sep 26", "Oct 26"],
+    "values": [0.25, 0.71, 1.33, 2.74, null, null, null, null, 4.38, 4.45, 4.83, 5.54, 6.09]
+  },
+  "repo_history": {
+    "labels": ["Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26", "Sep 26", "Oct 26"],
+    "values": [5.5, 5.5, 5.25, 5.25, 5.25, 5.25, 5.25, 5.25, 5.25, 5.25, 5.25, 5.25, 5.5]
+  },
+  "rbi_projection": {
+    "asof": "2026-10-07",
+    "quarters": ["Q2 FY27", "Q3 FY27", "Q4 FY27", "Q1 FY28"],
+    "cpi": [4.9, 6.0, 5.7, 5.6], "gdp": [7.2, 6.9, 6.8, 7.1],
+    "cpi_fy": 5.2, "gdp_fy": 7.1, "core_fy": 4.4
+  },
+  "gdp": { "asof": "2026-08-31", "latest": 7.8, "label": "Q1 FY27", "labels": ["Q1 FY26", "Q4 FY26", "Q1 FY27"], "values": [6.9, 8.6, 7.8] },
+  "pmi": { "asof": "2026-11-02", "manufacturing": 54.7, "prev": 55.1, "composite_flash": 56.7 },
+  "reserves": { "asof": "2026-10-30", "usd_bn": 717.06 },
+  "street": [
+    { "who": "Nomura", "view": "+25 bps to 5.75% in December" },
+    { "who": "SBI Research", "view": "+50 bps to 6.00% in December" },
+    { "who": "Crisil", "view": "Strong possibility of another hike in December" }
+  ]
+}

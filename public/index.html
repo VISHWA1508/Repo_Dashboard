@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Repo Rate Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Live Repo Rate Dashboard</h1>
+      <p class="sub">India's policy rate decision, rebuilt automatically from live market data and the latest RBI and MoSPI numbers.</p>
+    </div>
+    <div class="status" id="status" aria-live="polite"><span class="dot" id="dot"></span><span id="statusText">Connecting…</span></div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+
+  <section class="hero" aria-label="Suggested decision">
+    <div class="card decision">
+      <div class="lbl">Suggested move at the next MPC meeting</div>
+      <div class="big" id="move">—</div>
+      <div class="verdict" id="verdict"></div>
+      <dl class="kv" id="kv"></dl>
+    </div>
+    <div class="card">
+      <div class="lbl" id="noteLabel">Reasoning</div>
+      <div id="narrative" class="prose"></div>
+    </div>
+  </section>
+
+  <section class="tiles" id="tiles" aria-label="Key indicators"></section>
+
+  <h2>Why this call</h2>
+  <div class="grid2">
+    <div class="card"><h3>Reasons</h3><ul id="reasons" class="list"></ul></div>
+    <div class="card"><h3>Risks to watch</h3><ul id="risks" class="list"></ul></div>
+  </div>
+
+  <h2>What would change it</h2>
+  <div class="card"><div class="scroll"><table id="scen"></table></div>
+    <p class="fine">Each row re-runs the rule with one shock. The suggested move is rounded to 25 bps, so small shocks often change nothing.</p></div>
+
+  <h2>Live markets</h2>
+  <div class="grid2">
+    <div class="card"><h3>Brent crude ($/bbl)</h3><div class="chart" id="ch_brent"></div><p class="src" id="s_brent"></p></div>
+    <div class="card"><h3>USD/INR</h3><div class="chart" id="ch_usdinr"></div><p class="src" id="s_usdinr"></p></div>
+    <div class="card"><h3>US 10-year Treasury yield (%)</h3><div class="chart" id="ch_ust10"></div><p class="src" id="s_ust10"></p></div>
+    <div class="card"><h3>India 10-year yield (%, monthly)</h3><div class="chart" id="ch_in10y"></div><p class="src" id="s_in10y"></p></div>
+  </div>
+
+  <h2>India policy and inflation</h2>
+  <div class="grid2">
+    <div class="card"><h3>Repo rate vs CPI inflation</h3>
+      <div class="legend"><span><i style="background:var(--s1)"></i>Repo rate</span><span><i style="background:var(--s2)"></i>CPI inflation</span></div>
+      <div class="chart" id="ch_rc"></div></div>
+    <div class="card"><h3>RBI projections</h3>
+      <div class="legend"><span><i style="background:var(--s2)"></i>CPI inflation</span><span><i style="background:var(--s3)"></i>Real GDP growth</span></div>
+      <div class="chart" id="ch_proj"></div></div>
+  </div>
+
+  <h2>Data freshness</h2>
+  <div class="card"><div class="scroll"><table id="fresh"></table></div>
+    <p class="fine">Market data refreshes by itself. RBI and MoSPI figures come from <code>data/india.json</code>: edit and save it after each release and everything above updates within a second.</p></div>
+
+  <p class="fine foot">Educational tool, not investment advice. The rule is a simplified teaching model; the real MPC also weighs core inflation, liquidity and other factors.</p>
+</div>
+<div class="tip" id="tip"></div>
+<script src="app.js"></script>
+</body>
+</html>
